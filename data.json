@@ -22,7 +22,7 @@
       "youtube": ""
     },
     "urgentMessage": {
-      "enabled": true,
+      "enabled": false,
       "text": "site is working"
     },
     "paymentGateway": {
