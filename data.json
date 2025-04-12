@@ -1,0 +1,28 @@
+{
+  "products": [],
+  "categories": ["Digit Bots", "Over/Under", "Rise/Fall"],
+  "settings": {
+    "adminEmail": "martinke444@gmail.com",
+    "adminPassword": "#0719529802#0710160851#Pn",
+    "supportEmail": "support@derivbotstore.com",
+    "copyrightText": "© 2025 Deriv Bot Store. All rights reserved.",
+    "logoUrl": "",
+    "socials": {
+      "tiktok": "",
+      "whatsapp": "",
+      "call": "",
+      "instagram": "",
+      "x": "",
+      "facebook": "",
+      "youtube": ""
+    },
+    "urgentMessage": {
+      "enabled": false,
+      "text": ""
+    },
+    "paymentGateway": {
+      "name": "",
+      "url": "https://kaylie-payment-site.vercel.app/"
+    }
+  }
+}
