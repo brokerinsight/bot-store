@@ -3,7 +3,8 @@
   "categories": [
     "Digit Bots",
     "Over/Under",
-    "Rise/Fall"
+    "Rise/Fall",
+    "Differs Bots"
   ],
   "settings": {
     "adminEmail": "martinke444@gmail.com",
