@@ -214,6 +214,15 @@
 
   <!-- Scripts -->
   <script>
+    // Data version for consistency
+    const CURRENT_DATA_VERSION = "1.0";
+
+    // Check and reset data if version mismatches
+    if (localStorage.getItem("dataVersion") !== CURRENT_DATA_VERSION) {
+      localStorage.clear();
+      localStorage.setItem("dataVersion", CURRENT_DATA_VERSION);
+    }
+
     // Load data
     let products = JSON.parse(localStorage.getItem("products")) || [];
     let categories = JSON.parse(localStorage.getItem("categories")) || ["Digit Bots", "Over/Under", "Rise/Fall"];
