@@ -7,26 +7,34 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Custom styles for dark mode */
-    .dark .product-card img {
-      filter: brightness(0.9);
-    }
-    /* Modal backdrop */
-    #modal-backdrop {
-      backdrop-filter: blur(5px);
+    .dark .product-card img { filter: brightness(0.9); }
+    #modal-backdrop { backdrop-filter: blur(5px); }
+    .truncate-2-lines {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+  <!-- Urgent Message Pop-up -->
+  <div id="urgent-message" class="fixed top-0 left-0 right-0 bg-yellow-500 text-white p-4 z-50 hidden">
+    <p id="urgent-text" class="text-center"></p>
+    <button id="urgent-close" class="mt-2 block mx-auto bg-gray-800 text-white px-4 py-1 rounded">Okay</button>
+  </div>
+
   <!-- Navbar -->
   <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-gray-800 dark:text-white">Deriv Bot Store</h1>
+          <div id="logo-container">
+            <h1 class="text-xl font-bold text-gray-800 dark:text-white">Deriv Bot Store</h1>
+          </div>
           <div id="nav-links" class="ml-6 flex space-x-4 sm:space-x-8">
-            <a href="#" data-category="all" class="nav-link border-b-2 border-indigo-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>
-            <!-- Dynamic categories added here -->
+            <a href="#" data-category="all" class="nav-link border-b-2 border-green-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>
+            <!-- Dynamic categories -->
           </div>
         </div>
         <div class="flex items-center">
@@ -40,7 +48,7 @@
 
   <!-- Search Bar -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <input id="search-bar" type="text" placeholder="Search bots by name or description..." class="w-full p-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    <input id="search-bar" type="text" placeholder="Search bots by name or description..." class="w-full p-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500">
   </div>
 
   <!-- Main Content -->
@@ -51,87 +59,43 @@
     </div>
   </main>
 
-  <!-- Modal -->
-  <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-30" onclick="closeModal()">
-    <div id="modal-content" class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-lg mx-auto mt-20" onclick="event.stopPropagation()">
-      <h3 id="modal-name" class="text-xl font-bold text-gray-900 dark:text-white"></h3>
-      <img id="modal-img" class="w-full h-48 object-cover rounded-md mt-4" loading="lazy" alt="">
-      <p id="modal-desc" class="text-gray-600 dark:text-gray-300 mt-4"></p>
-      <p id="modal-price" class="text-indigo-600 dark:text-indigo-400 font-bold mt-2"></p>
-      <p id="modal-category" class="text-gray-500 dark:text-gray-400 mt-2"></p>
-      <a id="modal-buy" href="#" class="mt-6 block w-full bg-indigo-600 text-white text-center py-2 rounded-md hover:bg-indigo-700">Proceed to Payment</a>
-      <button onclick="closeModal()" class="mt-2 w-full text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">Close</button>
-    </div>
-  </div>
-
   <!-- Footer -->
   <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12 py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p class="text-gray-600 dark:text-gray-300">&copy; 2025 Deriv Bot Store. All rights reserved.</p>
-      <p class="text-gray-500 dark:text-gray-400 mt-2">Support: <a href="mailto:support@derivbotstore.com" class="underline hover:text-indigo-600 dark:hover:text-indigo-400">support@derivbotstore.com</a></p>
+      <p id="copyright-text" class="text-gray-600 dark:text-gray-300">© 2025 Deriv Bot Store. All rights reserved.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Support: <a id="support-email" href="mailto:support@derivbotstore.com" class="underline hover:text-green-600 dark:hover:text-green-400">support@derivbotstore.com</a></p>
+      <div id="social-links" class="mt-4 flex justify-center space-x-4">
+        <!-- Social links injected here -->
+      </div>
     </div>
   </footer>
 
   <!-- Scripts -->
   <script>
-    // Default products (loaded if localStorage is empty)
-    const defaultProducts = [
-      {
-        name: "Digit Bot Pro",
-        price: "9.99",
-        item: "101",
-        desc: "Automate your digit trading with precision.",
-        category: "Digit Bots",
-        img: "https://via.placeholder.com/300x200?text=Digit+Bot",
-        isNew: true,
-        clicks: 0
-      },
-      {
-        name: "Over/Under Master",
-        price: "7.50",
-        item: "102",
-        desc: "Predict market trends with confidence.",
-        category: "Over/Under",
-        img: "https://via.placeholder.com/300x200?text=Over+Under",
-        isNew: false,
-        clicks: 0
-      },
-      {
-        name: "Rise/Fall Sniper",
-        price: "8.25",
-        item: "103",
-        desc: "Capture quick profits with accurate signals.",
-        category: "Rise/Fall",
-        img: "https://via.placeholder.com/300x200?text=Rise+Fall",
-        isNew: true,
-        clicks: 0
-      }
-    ];
-
-    // Load products and categories from localStorage or use defaults
-    let products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
+    // Load data
+    let products = JSON.parse(localStorage.getItem("products")) || [];
     let categories = JSON.parse(localStorage.getItem("categories")) || ["Digit Bots", "Over/Under", "Rise/Fall"];
-
-    // Save to localStorage
-    function saveData() {
-      localStorage.setItem("products", JSON.stringify(products));
-      localStorage.setItem("categories", JSON.stringify(categories));
-    }
+    let settings = JSON.parse(localStorage.getItem("settings")) || {
+      supportEmail: "support@derivbotstore.com",
+      copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
+      logoUrl: "",
+      socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "" },
+      urgentMessage: { enabled: false, text: "" }
+    };
 
     // Render navbar categories
     function renderNavLinks() {
       const navLinks = document.getElementById("nav-links");
-      navLinks.innerHTML = `<a href="#" data-category="all" class="nav-link border-b-2 border-indigo-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>`;
+      navLinks.innerHTML = `<a href="#" data-category="all" class="nav-link border-b-2 border-green-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>`;
       categories.forEach(cat => {
         navLinks.innerHTML += `<a href="#" data-category="${cat}" class="nav-link text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">${cat}</a>`;
       });
-      // Re-attach event listeners
       document.querySelectorAll(".nav-link").forEach(link => {
         link.addEventListener("click", (e) => {
           e.preventDefault();
           filterProducts(link.dataset.category);
-          document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("border-b-2", "border-indigo-500"));
-          link.classList.add("border-b-2", "border-indigo-500");
+          document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("border-b-2", "border-green-500"));
+          link.classList.add("border-b-2", "border-green-500");
         });
       });
     }
@@ -140,14 +104,12 @@
     function renderProducts(filter = "all", search = "") {
       const grid = document.getElementById("product-grid");
       grid.innerHTML = "";
-      let filteredProducts = products;
+      let filteredProducts = products.filter(p => !p.isArchived);
       
-      // Category filter
       if (filter !== "all") {
-        filteredProducts = products.filter(p => p.category === filter);
+        filteredProducts = filteredProducts.filter(p => p.category === filter);
       }
       
-      // Search filter
       if (search) {
         const term = search.toLowerCase();
         filteredProducts = filteredProducts.filter(p => 
@@ -156,52 +118,31 @@
       }
 
       filteredProducts.forEach(product => {
-        const encodedName = encodeURIComponent(product.name);
-        const buyLink = `https://kaylie-payment-site.vercel.app/?name=${encodedName}&price=${product.price}&item=${product.item}`;
         const card = document.createElement("div");
         card.className = "product-card bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden transform hover:scale-105 hover:shadow-lg transition-all duration-300";
         card.innerHTML = `
           <img src="${product.img}" alt="${product.name}" class="w-full h-48 object-cover" loading="lazy">
           <div class="p-6 relative">
-            ${product.isNew ? '<span class="absolute top-2 right-2 bg-indigo-600 text-white text-xs font-semibold px-2 py-1 rounded">NEW</span>' : ''}
+            ${product.isNew ? '<span class="absolute top-2 right-2 bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded">NEW</span>' : ''}
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">${product.name}</h3>
-            <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm">${product.desc}</p>
-            <p class="mt-2 text-indigo-600 dark:text-indigo-400 font-bold">$${product.price}</p>
+            <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm truncate-2-lines">${product.desc}</p>
+            <p class="mt-2 text-green-600 dark:text-green-400 font-bold">$${product.price}</p>
             <p class="mt-1 text-gray-500 dark:text-gray-400 text-sm">Category: ${product.category}</p>
             <p class="mt-1 text-gray-400 dark:text-gray-500 text-xs">Clicks: ${product.clicks}</p>
-            <button class="buy-now mt-4 w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition-colors" data-product='${JSON.stringify(product)}'>Buy Now</button>
+            <button class="view-details mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-colors" data-product='${JSON.stringify(product)}'>View Details</button>
           </div>
         `;
         grid.appendChild(card);
       });
 
-      // Attach Buy Now listeners
-      document.querySelectorAll(".buy-now").forEach(btn => {
+      document.querySelectorAll(".view-details").forEach(btn => {
         btn.addEventListener("click", (e) => {
           const product = JSON.parse(e.target.dataset.product);
           product.clicks = (product.clicks || 0) + 1;
-          saveData();
-          openModal(product);
+          localStorage.setItem("products", JSON.stringify(products));
+          window.location.href = `/product/${product.item}`;
         });
       });
-    }
-
-    // Open modal
-    function openModal(product) {
-      const encodedName = encodeURIComponent(product.name);
-      const buyLink = `https://kaylie-payment-site.vercel.app/?name=${encodedName}&price=${product.price}&item=${product.item}`;
-      document.getElementById("modal-name").textContent = product.name;
-      document.getElementById("modal-img").src = product.img;
-      document.getElementById("modal-desc").textContent = product.desc;
-      document.getElementById("modal-price").textContent = `$${product.price}`;
-      document.getElementById("modal-category").textContent = `Category: ${product.category}`;
-      document.getElementById("modal-buy").href = buyLink;
-      document.getElementById("modal-backdrop").classList.remove("hidden");
-    }
-
-    // Close modal
-    function closeModal() {
-      document.getElementById("modal-backdrop").classList.add("hidden");
     }
 
     // Filter products
@@ -212,25 +153,66 @@
 
     // Search handler
     document.getElementById("search-bar").addEventListener("input", (e) => {
-      const activeCategory = document.querySelector(".nav-link.border-indigo-500").dataset.category;
+      const activeCategory = document.querySelector(".nav-link.border-green-500").dataset.category;
       renderProducts(activeCategory, e.target.value);
     });
 
     // Dark mode toggle
-    document.getElementById("dark-mode-toggle").addEventListener("click", () => {
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+      darkModeToggle.querySelector("svg").innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />`;
+    }
+    darkModeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      localStorage.setItem("darkMode", document.body.classList.contains("dark"));
-      const icon = document.getElementById("dark-mode-toggle").querySelector("svg");
-      icon.innerHTML = document.body.classList.contains("dark") ?
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("darkMode", isDark);
+      darkModeToggle.querySelector("svg").innerHTML = isDark ?
         `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />` :
         `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
     });
 
-    // Initialize
-    if (localStorage.getItem("darkMode") === "true") {
-      document.body.classList.add("dark");
-      document.getElementById("dark-mode-toggle").querySelector("svg").innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />`;
+    // Urgent message
+    if (settings.urgentMessage.enabled && settings.urgentMessage.text) {
+      document.getElementById("urgent-message").classList.remove("hidden");
+      document.getElementById("urgent-text").textContent = settings.urgentMessage.text;
+      document.getElementById("urgent-close").addEventListener("click", () => {
+        document.getElementById("urgent-message").classList.add("hidden");
+      });
     }
+
+    // Update footer
+    document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
+    document.getElementById("support-email").textContent = settings.supportEmail;
+    document.getElementById("copyright-text").textContent = settings.copyrightText;
+
+    // Update logo
+    if (settings.logoUrl) {
+      document.getElementById("logo-container").innerHTML = `<img src="${settings.logoUrl}" alt="Logo" class="h-10">`;
+    }
+
+    // Update social links
+    const socialLinks = document.getElementById("social-links");
+    const socialIcons = {
+      tiktok: "TikTok",
+      whatsapp: "WhatsApp",
+      call: "Call",
+      instagram: "Instagram",
+      x: "X",
+      facebook: "Facebook"
+    };
+    Object.keys(settings.socials).forEach(key => {
+      if (settings.socials[key]) {
+        const link = document.createElement("a");
+        link.href = settings.socials[key];
+        link.className = "text-gray-500 hover:text-green-600 dark:hover:text-green-400";
+        link.textContent = socialIcons[key];
+        socialLinks.appendChild(link);
+      }
+    });
+
+    // Initialize
     renderNavLinks();
     renderProducts();
   </script>
