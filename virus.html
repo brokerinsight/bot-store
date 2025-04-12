@@ -6,6 +6,9 @@
   <title>Virus - Deriv Bot Store</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #login-modal:not(.hidden) ~ * { filter: blur(5px); }
+  </style>
 </head>
 <body class="bg-gray-100">
   <!-- Admin Navbar -->
@@ -15,7 +18,7 @@
         <div class="flex items-center">
           <h1 class="text-xl font-bold text-gray-800">Admin Panel</h1>
           <div class="ml-6 flex space-x-4 sm:space-x-8">
-            <a href="#add-bot" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Add Bot</a>
+            <a href="#add-bot" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 border-green-500">Add Bot</a>
             <a href="#manage-bots" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Manage Bots</a>
             <a href="#settings" class="nav-link text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">Settings</a>
           </div>
@@ -27,7 +30,7 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Add Bot Section -->
-    <section id="add-bot" class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <section id="add-bot" class="section bg-white rounded-lg shadow-md p-6 mb-8">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Add New Bot</h2>
       <form id="product-form">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -73,7 +76,7 @@
     </section>
 
     <!-- Manage Bots Section -->
-    <section id="manage-bots" class="bg-white rounded-lg shadow-md p-6 mb-8">
+    <section id="manage-bots" class="section bg-white rounded-lg shadow-md p-6 mb-8 hidden">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Manage Bots</h2>
       <ul id="bot-list" class="space-y-4">
         <!-- Bots listed here -->
@@ -81,7 +84,7 @@
     </section>
 
     <!-- Settings Section -->
-    <section id="settings" class="bg-white rounded-lg shadow-md p-6">
+    <section id="settings" class="section bg-white rounded-lg shadow-md p-6 hidden">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Settings</h2>
       <!-- Urgent Message -->
       <div class="mb-6">
@@ -138,8 +141,27 @@
             <label for="facebook" class="block text-sm font-medium text-gray-700">Facebook</label>
             <input type="url" id="facebook" class="mt-1 w-full p-2 border border-gray-300 rounded-md">
           </div>
+          <div>
+            <label for="youtube" class="block text-sm font-medium text-gray-700">YouTube</label>
+            <input type="url" id="youtube" class="mt-1 w-full p-2 border border-gray-300 rounded-md">
+          </div>
         </div>
         <button id="save-socials" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Save Socials</button>
+      </div>
+      <!-- Payment Gateway -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Payment Gateway</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="payment-name" class="block text-sm font-medium text-gray-700">Payment Gateway Name</label>
+            <input type="text" id="payment-name" class="mt-1 w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Crypto">
+          </div>
+          <div>
+            <label for="payment-url" class="block text-sm font-medium text-gray-700">Payment Gateway URL</label>
+            <input type="url" id="payment-url" class="mt-1 w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., https://crypto-payment.com">
+          </div>
+        </div>
+        <button id="save-payment" class="mt-4 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Save Payment Gateway</button>
       </div>
       <!-- Change Password -->
       <div>
@@ -167,9 +189,10 @@
         <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
         <input type="email" id="login-email" class="mt-1 w-full p-2 border border-gray-300 rounded-md" required>
       </div>
-      <div class="mb-4">
+      <div class="mb-4 relative">
         <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
         <input type="password" id="login-password" class="mt-1 w-full p-2 border border-gray-300 rounded-md" required>
+        <button type="button" id="toggle-password" class="absolute right-2 top-9 text-gray-500">Show</button>
       </div>
       <button id="login-submit" class="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700">Login</button>
     </div>
@@ -186,8 +209,9 @@
       supportEmail: "support@derivbotstore.com",
       copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
       logoUrl: "",
-      socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "" },
-      urgentMessage: { enabled: false, text: "" }
+      socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "", youtube: "" },
+      urgentMessage: { enabled: false, text: "" },
+      paymentGateway: { name: "", url: "https://kaylie-payment-site.vercel.app/" }
     };
 
     // Save data
@@ -199,6 +223,13 @@
 
     // Admin login
     const loginModal = document.getElementById("login-modal");
+    const loginPassword = document.getElementById("login-password");
+    const togglePassword = document.getElementById("toggle-password");
+    togglePassword.addEventListener("click", () => {
+      const type = loginPassword.type === "password" ? "text" : "password";
+      loginPassword.type = type;
+      togglePassword.textContent = type === "password" ? "Show" : "Hide";
+    });
     document.getElementById("login-submit").addEventListener("click", () => {
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;
@@ -207,6 +238,19 @@
       } else {
         alert("Invalid email or password!");
       }
+    });
+
+    // Navigation
+    const sections = document.querySelectorAll(".section");
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const target = link.getAttribute("href").substring(1);
+        sections.forEach(section => section.classList.add("hidden"));
+        document.getElementById(target).classList.remove("hidden");
+        document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("border-b-2", "border-green-500"));
+        link.classList.add("border-b-2", "border-green-500");
+      });
     });
 
     // Populate category select
@@ -325,10 +369,21 @@
         call: document.getElementById("call").value,
         instagram: document.getElementById("instagram").value,
         x: document.getElementById("x").value,
-        facebook: document.getElementById("facebook").value
+        facebook: document.getElementById("facebook").value,
+        youtube: document.getElementById("youtube").value
       };
       saveData();
       alert("Social media links saved!");
+    });
+
+    // Settings: Payment Gateway
+    document.getElementById("save-payment").addEventListener("click", () => {
+      settings.paymentGateway = {
+        name: document.getElementById("payment-name").value,
+        url: document.getElementById("payment-url").value || "https://kaylie-payment-site.vercel.app/"
+      };
+      saveData();
+      alert("Payment gateway saved!");
     });
 
     // Settings: Change Password
@@ -358,6 +413,9 @@
     document.getElementById("instagram").value = settings.socials.instagram || "";
     document.getElementById("x").value = settings.socials.x || "";
     document.getElementById("facebook").value = settings.socials.facebook || "";
+    document.getElementById("youtube").value = settings.socials.youtube || "";
+    document.getElementById("payment-name").value = settings.paymentGateway.name || "";
+    document.getElementById("payment-url").value = settings.paymentGateway.url || "https://kaylie-payment-site.vercel.app/";
 
     // Initialize
     renderCategories();
