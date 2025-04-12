@@ -89,6 +89,17 @@
     <!-- Settings Section -->
     <section id="settings" class="section bg-white rounded-lg shadow-md p-6 hidden">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Settings</h2>
+      <!-- Manage Categories -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Manage Categories</h3>
+        <div class="flex gap-4 mb-4">
+          <input type="text" id="new-category" class="w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Volatility Bots">
+          <button id="add-category" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Add Category</button>
+        </div>
+        <ul id="category-list" class="space-y-2">
+          <!-- Categories listed here -->
+        </ul>
+      </div>
       <!-- Urgent Message -->
       <div class="mb-6">
         <label class="flex items-center">
@@ -268,6 +279,44 @@
       });
     }
 
+    // Render categories in settings
+    function renderCategoryList() {
+      const categoryList = document.getElementById("category-list");
+      categoryList.innerHTML = categories.map((cat, index) => `
+        <li class="flex justify-between items-center p-2 bg-gray-50 rounded">
+          <span>${cat}</span>
+          <button onclick="deleteCategory(${index})" class="text-red-600 hover:text-red-800">Delete</button>
+        </li>
+      `).join("");
+    }
+
+    // Add category
+    document.getElementById("add-category").addEventListener("click", () => {
+      const newCat = document.getElementById("new-category").value.trim();
+      if (newCat && !categories.includes(newCat)) {
+        categories.push(newCat);
+        saveData();
+        renderCategories();
+        renderCategoryList();
+        document.getElementById("new-category").value = "";
+        alert("Category added!");
+      } else if (!newCat) {
+        alert("Please enter a category name!");
+      } else {
+        alert("Category already exists!");
+      }
+    });
+
+    // Delete category
+    function deleteCategory(index) {
+      if (confirm("Are you sure you want to delete this category? Bots in this category will remain but won't be visible until reassigned.")) {
+        categories.splice(index, 1);
+        saveData();
+        renderCategories();
+        renderCategoryList();
+      }
+    }
+
     // Render bots in manage section
     function renderBots() {
       const botList = document.getElementById("bot-list");
@@ -425,6 +474,7 @@
 
     // Initialize
     renderCategories();
+    renderCategoryList();
     renderBots();
   </script>
 </body>
