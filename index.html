@@ -73,12 +73,11 @@
     #mobile-menu.open {
       transform: translateX(0);
     }
-    /* Search bar with icon */
     .search-container {
       position: relative;
     }
     .search-container input {
-      padding-left: 2.5rem; /* Space for the icon */
+      padding-left: 2.5rem;
     }
     .search-container svg {
       position: absolute;
@@ -87,7 +86,7 @@
       transform: translateY(-50%);
       width: 1.25rem;
       height: 1.25rem;
-      color: #6b7280; /* Gray-500 */
+      color: #6b7280;
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -116,10 +115,8 @@
           <div id="logo-container">
             <h1 class="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">Deriv Bot Store</h1>
           </div>
-          <!-- Desktop Navbar -->
           <div id="nav-links" class="hidden sm:ml-6 sm:flex sm:space-x-4 sm:space-x-8">
             <a href="#" data-category="all" class="nav-link border-b-2 border-green-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Home</a>
-            <!-- Dynamic categories -->
           </div>
         </div>
         <div class="flex items-center">
@@ -128,7 +125,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
           </button>
-          <!-- Hamburger Menu Button (Mobile) -->
           <button id="mobile-menu-button" class="sm:hidden text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white p-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -137,7 +133,6 @@
         </div>
       </div>
     </div>
-    <!-- Mobile Menu -->
     <div id="mobile-menu" class="sm:hidden fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg z-30">
       <div class="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 class="text-lg font-bold text-gray-800 dark:text-white">Menu</h2>
@@ -149,7 +144,6 @@
       </div>
       <div id="mobile-nav-links" class="flex flex-col p-4 space-y-4">
         <a href="#" data-category="all" class="nav-link text-gray-900 dark:text-white text-sm font-medium">Home</a>
-        <!-- Dynamic categories -->
       </div>
     </div>
   </nav>
@@ -176,7 +170,6 @@
   <div id="modal-backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div>
   <div id="modal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full mx-4 max-h-[90vh] flex flex-col sm:flex-row">
-      <!-- Content Area -->
       <div class="p-6 overflow-y-auto flex-1">
         <h3 id="modal-name" class="text-2xl font-bold text-gray-900 dark:text-white"></h3>
         <div class="aspect-ratio-16-9 mt-4">
@@ -187,7 +180,6 @@
         <p id="modal-price" class="text-green-600 dark:text-green-400 font-bold mt-4"></p>
         <p id="modal-category" class="text-gray-500 dark:text-gray-400 mt-2"></p>
       </div>
-      <!-- Sidebar -->
       <div class="bg-gray-100 dark:bg-gray-700 p-6 w-full sm:w-64 flex-shrink-0 flex flex-col justify-between">
         <div>
           <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Purchase</h4>
@@ -212,26 +204,31 @@
 
   <!-- Scripts -->
   <script>
-    // Data version for consistency
-    const CURRENT_DATA_VERSION = "1.0";
+    // Data variables
+    let products = [];
+    let categories = [];
+    let settings = {};
 
-    // Check and reset data if version mismatches
-    if (localStorage.getItem("dataVersion") !== CURRENT_DATA_VERSION) {
-      localStorage.clear();
-      localStorage.setItem("dataVersion", CURRENT_DATA_VERSION);
+    // Fetch data from GitHub (raw content URL)
+    async function fetchData() {
+      try {
+        const response = await fetch("https://raw.githubusercontent.com/brokerinsight/bot-store/main/data.json");
+        const data = await response.json();
+        products = data.products || [];
+        categories = data.categories || ["Digit Bots", "Over/Under", "Rise/Fall"];
+        settings = data.settings || {
+          supportEmail: "support@derivbotstore.com",
+          copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
+          logoUrl: "",
+          socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "", youtube: "" },
+          urgentMessage: { enabled: false, text: "" },
+          paymentGateway: { name: "", url: "https://kaylie-payment-site.vercel.app/" }
+        };
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        alert("Failed to load data from GitHub. Please check the console for details.");
+      }
     }
-
-    // Load data
-    let products = JSON.parse(localStorage.getItem("products")) || [];
-    let categories = JSON.parse(localStorage.getItem("categories")) || ["Digit Bots", "Over/Under", "Rise/Fall"];
-    let settings = JSON.parse(localStorage.getItem("settings")) || {
-      supportEmail: "support@derivbotstore.com",
-      copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
-      logoUrl: "",
-      socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "", youtube: "" },
-      urgentMessage: { enabled: false, text: "" },
-      paymentGateway: { name: "", url: "https://kaylie-payment-site.vercel.app/" }
-    };
 
     // In-app browser detection
     const userAgent = navigator.userAgent.toLowerCase();
@@ -319,12 +316,13 @@
       });
 
       document.querySelectorAll(".view-details").forEach(btn => {
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", async () => {
           const index = parseInt(btn.dataset.index);
           const product = products[index];
           if (product) {
             product.clicks = (product.clicks || 0) + 1;
-            localStorage.setItem("products", JSON.stringify(products));
+            // Since index.html doesn't write to GitHub, we'll just update the local data
+            // For a proper sync, we'd need a backend or allow index.html to write to GitHub
             showModal(product);
           }
         });
@@ -401,50 +399,63 @@
         `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
     });
 
-    // Urgent message
-    if (settings.urgentMessage.enabled && settings.urgentMessage.text) {
-      document.getElementById("urgent-message").classList.remove("hidden");
-      document.getElementById("urgent-text").textContent = settings.urgentMessage.text;
-      document.getElementById("urgent-close").addEventListener("click", () => {
-        document.getElementById("urgent-message").classList.add("hidden");
+    // Update footer
+    async function updateFooter() {
+      document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
+      document.getElementById("support-email").textContent = settings.supportEmail;
+      document.getElementById("copyright-text").textContent = settings.copyrightText;
+
+      const socialLinks = document.getElementById("social-links");
+      const socialIcons = {
+        tiktok: "TikTok",
+        whatsapp: "WhatsApp",
+        call: "Call",
+        instagram: "Instagram",
+        x: "X",
+        facebook: "Facebook",
+        youtube: "YouTube"
+      };
+      Object.keys(settings.socials).forEach(key => {
+        if (settings.socials[key]) {
+          const link = document.createElement("a");
+          link.href = settings.socials[key];
+          link.target = "_blank";
+          link.className = "text-gray-500 hover:text-green-600 dark:hover:text-green-400 mx-2 my-1";
+          link.textContent = socialIcons[key];
+          socialLinks.appendChild(link);
+        }
       });
     }
 
-    // Update footer
-    document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
-    document.getElementById("support-email").textContent = settings.supportEmail;
-    document.getElementById("copyright-text").textContent = settings.copyrightText;
-
     // Update logo
-    if (settings.logoUrl) {
-      document.getElementById("logo-container").innerHTML = `<img src="${settings.logoUrl}" alt="Logo" class="h-10">`;
+    function updateLogo() {
+      if (settings.logoUrl) {
+        document.getElementById("logo-container").innerHTML = `<img src="${settings.logoUrl}" alt="Logo" class="h-10">`;
+      }
     }
 
-    // Update social links
-    const socialLinks = document.getElementById("social-links");
-    const socialIcons = {
-      tiktok: "TikTok",
-      whatsapp: "WhatsApp",
-      call: "Call",
-      instagram: "Instagram",
-      x: "X",
-      facebook: "Facebook",
-      youtube: "YouTube"
-    };
-    Object.keys(settings.socials).forEach(key => {
-      if (settings.socials[key]) {
-        const link = document.createElement("a");
-        link.href = settings.socials[key];
-        link.target = "_blank";
-        link.className = "text-gray-500 hover:text-green-600 dark:hover:text-green-400 mx-2 my-1";
-        link.textContent = socialIcons[key];
-        socialLinks.appendChild(link);
+    // Urgent message
+    function showUrgentMessage() {
+      if (settings.urgentMessage.enabled && settings.urgentMessage.text) {
+        document.getElementById("urgent-message").classList.remove("hidden");
+        document.getElementById("urgent-text").textContent = settings.urgentMessage.text;
+        document.getElementById("urgent-close").addEventListener("click", () => {
+          document.getElementById("urgent-message").classList.add("hidden");
+        });
       }
-    });
+    }
 
     // Initialize
-    renderNavLinks();
-    renderProducts();
+    async function initialize() {
+      await fetchData();
+      renderNavLinks();
+      renderProducts();
+      updateFooter();
+      updateLogo();
+      showUrgentMessage();
+    }
+
+    initialize();
   </script>
 </body>
 </html>
