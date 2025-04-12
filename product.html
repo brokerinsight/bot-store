@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Deriv Bot Store</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dark .product-img { filter: brightness(0.9); }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+  <!-- Navbar -->
+  <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <div id="logo-container">
+            <h1 class="text-xl font-bold text-gray-800 dark:text-white">Deriv Bot Store</h1>
+          </div>
+          <div class="ml-6 flex space-x-4 sm:space-x-8">
+            <a href="/" class="text-gray-500 hover:text-gray-900 dark:hover:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Back to Store</a>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <button id="dark-mode-toggle" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white p-2">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div id="product-details" class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6">
+      <h2 id="product-name" class="text-2xl font-bold text-gray-900 dark:text-white"></h2>
+      <img id="product-img" class="product-img w-full h-64 object-cover rounded-md mt-4" loading="lazy" alt="">
+      <p id="product-desc" class="text-gray-600 dark:text-gray-300 mt-4"></p>
+      <div id="product-embed" class="mt-4"></div>
+      <p id="product-price" class="text-green-600 dark:text-green-400 font-bold mt-4"></p>
+      <p id="product-category" class="text-gray-500 dark:text-gray-400 mt-2"></p>
+      <a id="product-buy" href="#" class="mt-6 block w-full bg-green-600 text-white text-center py-2 rounded-md hover:bg-green-700">Proceed to Payment</a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p id="copyright-text" class="text-gray-600 dark:text-gray-300">© 2025 Deriv Bot Store. All rights reserved.</p>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Support: <a id="support-email" href="mailto:support@derivbotstore.com" class="underline hover:text-green-600 dark:hover:text-green-400">support@derivbotstore.com</a></p>
+      <div id="social-links" class="mt-4 flex justify-center space-x-4">
+        <!-- Social links injected here -->
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Load data
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let settings = JSON.parse(localStorage.getItem("settings")) || {
+      supportEmail: "support@derivbotstore.com",
+      copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
+      logoUrl: "",
+      socials: { tiktok: "", whatsapp: "", call: "", instagram: "", x: "", facebook: "" }
+    };
+
+    // Get product ID from URL
+    const productId = window.location.pathname.split("/").pop();
+    const product = products.find(p => p.item === productId && !p.isArchived);
+
+    // Render product details
+    if (product) {
+      document.getElementById("product-name").textContent = product.name;
+      document.getElementById("product-img").src = product.img;
+      document.getElementById("product-img").alt = product.name;
+      document.getElementById("product-desc").textContent = product.desc;
+      if (product.embed) {
+        document.getElementById("product-embed").innerHTML = `<iframe class="w-full h-64" src="${product.embed}" frameborder="0" allowfullscreen></iframe>`;
+      }
+      document.getElementById("product-price").textContent = `$${product.price}`;
+      document.getElementById("product-category").textContent = `Category: ${product.category}`;
+      const encodedName = encodeURIComponent(product.name);
+      document.getElementById("product-buy").href = `https://kaylie-payment-site.vercel.app/?name=${encodedName}&price=${product.price}&item=${product.item}`;
+    } else {
+      document.getElementById("product-details").innerHTML = `<p class="text-red-600">Product not found or archived.</p>`;
+    }
+
+    // Dark mode toggle
+    const darkModeToggle = document.getElementById("dark-mode-toggle");
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    if (isDarkMode) {
+      document.body.classList.add("dark");
+      darkModeToggle.querySelector("svg").innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />`;
+    }
+    darkModeToggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("darkMode", isDark);
+      darkModeToggle.querySelector("svg").innerHTML = isDark ?
+        `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />` :
+        `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
+    });
+
+    // Update footer
+    document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
+    document.getElementById("support-email").textContent = settings.supportEmail;
+    document.getElementById("copyright-text").textContent = settings.copyrightText;
+
+    // Update logo
+    if (settings.logoUrl) {
+      document.getElementById("logo-container").innerHTML = `<img src="${settings.logoUrl}" alt="Logo" class="h-10">`;
+    }
+
+    // Update social links
+    const socialLinks = document.getElementById("social-links");
+    const socialIcons = {
+      tiktok: "TikTok",
+      whatsapp: "WhatsApp",
+      call: "Call",
+      instagram: "Instagram",
+      x: "X",
+      facebook: "Facebook"
+    };
+    Object.keys(settings.socials).forEach(key => {
+      if (settings.socials[key]) {
+        const link = document.createElement("a");
+        link.href = settings.socials[key];
+        link.className = "text-gray-500 hover:text-green-600 dark:hover:text-green-400";
+        link.textContent = socialIcons[key];
+        socialLinks.appendChild(link);
+      }
+    });
+  </script>
+</body>
+</html>
