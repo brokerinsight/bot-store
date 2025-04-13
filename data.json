@@ -1,5 +1,18 @@
 {
-  "products": [],
+  "products": [
+    {
+      "name": "SmartDiffers X6 (6 in 1 ) 6 TOP TIER Differs strategies in 1 Bot",
+      "price": "9.99",
+      "desc": "🚀 Dominate the Deriv market with SmartDiffers X6 – a supercharged bot with 6 intelligent entry strategies and 3 dynamic stake recovery systems to fit every trader’s style.\n\n✅ Features:\n\n\n\n\n\n🎯 6 Powerful Differ Strategies (AI-assisted entry logic)\n\n\n\n🔁 3 Recovery Systems: Normal Martingale, Reverse Martingale, Split Martingale\n\n\n\n🧠 Smart Selection: Let the bot choose strategies randomly or follow your custom sequence (1-6)\n\n\n\n📊 Staking Freedom: Use manual stake or let the bot auto-calculate based on your balance (e.g., 10%)\n\n\n\n⚙️ Easy Settings: Choose 1 strategy or combine them all – your choice, your game!\n\n🎁 What You Get:\n\n\n\n\n\n📂 The full SmartDiffers X6 bot (.xml)\n\n\n\n📄 Detailed PDF documentation (setup, strategies & tips)\n\n\n\n📈 Risk Management Calculator (Excel)\n\n\n\n📹 Video tutorial (link provided)\n\n💵 Launch Offer: Only $10 for the first 10 buyers! Price increases afterward – grab your copy now.\n\n🎓 No experience? No problem. This bot is beginner friendly, yet packed with features pros love.\n\n🎯 Start making smarter trades on Deriv today!",
+      "embed": "https://www.youtube.com/embed/dz25dXOqIz4",
+      "category": "Differs bots",
+      "item": "80",
+      "img": "https://i9.ytimg.com/vi/dz25dXOqIz4/maxresdefault.jpg?v=67f105d3&sqp=CLyb7L8G&rs=AOn4CLB1f03kVyF8Y3svz-GW2bSgof106Q",
+      "isNew": true,
+      "isArchived": false,
+      "clicks": 0
+    }
+  ],
   "categories": [
     "Digit Bots",
     "Over/Under",
@@ -10,7 +23,7 @@
     "adminEmail": "martinke444@gmail.com",
     "adminPassword": "#0719529802#0710160851#Pn",
     "supportEmail": "kaylie254.business@gmail.com",
-    "copyrightText": "© 2025 Deriv Bot Store. All rights reserved.",
+    "copyrightText": "Â© 2025 Deriv Bot Store. All rights reserved.",
     "logoUrl": "",
     "socials": {
       "tiktok": "",
