@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pay for Your File</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #e0e7ff, #f0f2f5);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .payment-container {
+      background: #fff;
+      max-width: 520px;
+      margin: 60px auto;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .payment-container:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin: 15px 0;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 14px;
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="email"]:focus {
+      border-color: #28a745;
+      outline: none;
+      box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    }
+
+    .payment-button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+
+    .payment-button:hover::after {
+      width: 200%;
+      height: 200%;
+    }
+
+    #mpesaButton {
+      background: linear-gradient(90deg, #28a745, #34d058);
+    }
+
+    #mpesaButton:hover {
+      background: linear-gradient(90deg, #218838, #2cb94e);
+    }
+
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .popup-content h3 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #222;
+    }
+
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #28a745;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Updated styles for in-app browser popup */
+    .browser-popup-button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: block; /* Center the button */
+      margin: 20px auto 0; /* Center horizontally with top margin */
+    }
+
+    .browser-popup-button.cancel {
+      background: linear-gradient(90deg, #28a745, #34d058);
+      color: white;
+    }
+
+    .browser-popup-button.cancel:hover {
+      background: linear-gradient(90deg, #218838, #2cb94e);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="payment-container">
+    <h2>Payment Details</h2>
+    <p><strong>File Name:</strong> <span id="botName">Loading...</span></p>
+    <p><strong>Price:</strong> <span id="botPrice">$0.00</span></p>
+    <p><strong>Converted Price:</strong> <span id="convertedPrice">Loading...</span></p>
+
+    <input type="email" id="email" placeholder="Enter your email (required)" required/>
+
+    <button id="mpesaButton" class="payment-button">Pay with Mpesa or Airtel Money</button>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // In-app browser detection
+      const isInAppBrowser = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        console.log("User Agent:", navigator.userAgent);
+        const inAppPatterns = [
+          'tiktok', 'bytedancewebview',           // TikTok
+          'twitter', 'twitterandroid', 'twitterios', // X/Twitter
+          'fbav', 'fb_iab', 'fban', 'fb4a',       // Facebook
+          'instagram',                            // Instagram
+          'linkedin', 'linkedinapp',              // LinkedIn
+          'snapchat',                             // Snapchat
+          'line',                                 // LINE
+          'zalo',                                 // Zalo
+          'pinterest',                            // Pinterest
+          'messenger', 'fb_messenger',            // Facebook Messenger
+          'kakaotalk',                            // KakaoTalk
+          'dingtalk',                             // DingTalk
+          'weixin', 'micromessenger',             // WeChat
+          'reddit',                               // Reddit
+          'discord',                              // Discord
+          'telegram',                             // Telegram
+          'whatsapp'                              // WhatsApp
+        ];
+        const isAppBrowser = inAppPatterns.some(pattern => ua.includes(pattern));
+        const isWebView = /wv|webview|version\/[\d.]+.*safari/i.test(ua) && !/safari|chrome|firefox|ucbrowser|opera/i.test(ua);
+        const isRegularBrowser = /safari|chrome|firefox|edge|opera|ucbrowser/i.test(ua) && !/wv|webview/i.test(ua);
+        return (isAppBrowser || isWebView) && !isRegularBrowser;
+      };
+
+      // Show in-app browser popup
+      const showBrowserPopup = () => {
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+          <div class="popup-content">
+            <h3>Open in Browser</h3>
+            <p style="font-size: 1rem; color: #444; margin-bottom: 20px;">
+              For a smoother experience, please open this page in your default browser (e.g., Chrome, Safari). Tap your app's menu (often a three-dot icon) and select "Open in Browser".
+            </p>
+            <button class="browser-popup-button cancel">Cancel</button>
+          </div>`;
+        document.body.appendChild(popup);
+
+        // Cancel button
+        popup.querySelector(".cancel").addEventListener("click", () => {
+          popup.remove();
+        });
+      };
+
+      // Check if in-app browser and show popup
+      if (isInAppBrowser()) {
+        showBrowserPopup();
+      }
+
+      // Existing payment logic
+      const getQueryParam = param => new URLSearchParams(window.location.search).get(param);
+
+      let botName = getQueryParam("name") || "Unknown File";
+      let price = parseFloat(getQueryParam("price")) || 0;
+      let item = getQueryParam("item");
+      let exchangeRate = 140;
+      let priceKES = price * exchangeRate;
+
+      document.getElementById("botName").textContent = botName;
+      document.getElementById("botPrice").textContent = `$${price}`;
+
+      fetch("https://api.exchangerate-api.com/v4/latest/USD")
+        .then(res => res.json())
+        .then(data => {
+          exchangeRate = data.rates.KES || exchangeRate;
+          priceKES = Math.round(price * exchangeRate);
+          document.getElementById("convertedPrice").textContent = `${priceKES} KES`;
+        })
+        .catch(() => {
+          document.getElementById("convertedPrice").textContent = "Error fetching rate";
+        });
+
+      const showPopup = message => {
+        const popup = document.createElement("div");
+        popup.className = "popup";
+        popup.innerHTML = `
+          <div class="popup-content">
+            <h3>${message}</h3>
+            <div class="loader"></div>
+          </div>`;
+        document.body.appendChild(popup);
+        return popup;
+      };
+
+      const hidePopup = popup => {
+        if (popup) popup.remove();
+      };
+
+      const sendBotDownloadRequest = paymentMethod => {
+        const popup = showPopup("Loading the file. Do not exit the page...");
+
+        fetch("https://bot-delivery-system.onrender.com/deliver-bot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item, price, payment_method: paymentMethod })
+        })
+        .then(res => res.json())
+        .then(data => {
+          hidePopup(popup);
+          if (data.success && data.downloadLink) {
+            window.location.href = data.downloadLink;
+          } else {
+            alert(data.error || "Invalid transaction. Contact support.");
+            window.location.href = "mailto:kaylie254.business@gmail.com";
+          }
+        })
+        .catch(() => {
+          hidePopup(popup);
+          alert("Server error. Contact support.");
+        });
+      };
+
+      document.getElementById("mpesaButton").addEventListener("click", () => {
+        const email = document.getElementById("email").value.trim();
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+          alert("Please enter a valid email address.");
+          return;
+        }
+
+        const paystackAmount = priceKES * 100;
+        const handler = PaystackPop.setup({
+          key: 'pk_live_ad1c34c3a9d6d69b67adf99ab7f4e6dec180d3c4',
+          email,
+          amount: paystackAmount,
+          currency: "KES",
+          ref: "FILE-" + Math.floor(Math.random() * 1000000000 + 1),
+          callback: response => {
+            alert("Payment successful! Ref: " + response.reference);
+            sendBotDownloadRequest("paystack");
+          },
+          onClose: () => alert("Payment cancelled.")
+        });
+
+        handler.openIframe();
+      });
+    });
+  </script>
+</body>
+</html>
