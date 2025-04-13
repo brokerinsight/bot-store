@@ -16,7 +16,8 @@
   "categories": [
     "Over/Under",
     "Rise/Fall",
-    "Differs bots"
+    "Differs bots",
+    "Matches bots"
   ],
   "settings": {
     "adminEmail": "martinke444@gmail.com",
