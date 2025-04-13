@@ -265,6 +265,17 @@
       }
     }
 
+    // Function to handle button loading state
+    function setButtonLoading(button, isLoading) {
+      if (isLoading) {
+        button.disabled = true;
+        button.textContent = "Saving...";
+      } else {
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || button.textContent;
+      }
+    }
+
     async function saveData(maxRetries = 3) {
       if (!GITHUB_TOKEN) {
         await fetchGitHubToken();
@@ -387,7 +398,9 @@
       `).join("");
     }
 
-    document.getElementById("add-category").addEventListener("click", async () => {
+    document.getElementById("add-category").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       const newCat = document.getElementById("new-category").value.trim();
       if (newCat && !categories.includes(newCat)) {
         categories.push(newCat);
@@ -403,6 +416,7 @@
       } else {
         alert("Category already exists!");
       }
+      setButtonLoading(button, false);
     });
 
     async function deleteCategory(index) {
@@ -470,6 +484,9 @@
 
     document.getElementById("product-form").addEventListener("submit", async (e) => {
       e.preventDefault();
+      const button = e.target.querySelector("button[type='submit']");
+      button.dataset.originalText = button.textContent;
+      setButtonLoading(button, true);
       const product = {
         name: document.getElementById("name").value,
         price: document.getElementById("price").value,
@@ -489,9 +506,12 @@
         e.target.reset();
         renderBots();
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-urgent").addEventListener("click", async () => {
+    document.getElementById("save-urgent").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.urgentMessage = {
         enabled: document.getElementById("urgent-toggle").checked,
         text: document.getElementById("urgent-message").value
@@ -500,33 +520,45 @@
       if (success) {
         alert("Urgent message saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-email").addEventListener("click", async () => {
+    document.getElementById("save-email").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.supportEmail = document.getElementById("support-email").value;
       const success = await saveData();
       if (success) {
         alert("Support email saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-copyright").addEventListener("click", async () => {
+    document.getElementById("save-copyright").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.copyrightText = document.getElementById("copyright-text").value;
       const success = await saveData();
       if (success) {
         alert("Copyright text saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-logo").addEventListener("click", async () => {
+    document.getElementById("save-logo").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.logoUrl = document.getElementById("logo-url").value;
       const success = await saveData();
       if (success) {
         alert("Logo URL saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-socials").addEventListener("click", async () => {
+    document.getElementById("save-socials").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.socials = {
         tiktok: document.getElementById("tiktok").value,
         whatsapp: document.getElementById("whatsapp").value,
@@ -540,9 +572,12 @@
       if (success) {
         alert("Social media links saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("save-payment").addEventListener("click", async () => {
+    document.getElementById("save-payment").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       settings.paymentGateway = {
         name: document.getElementById("payment-name").value,
         url: document.getElementById("payment-url").value || "https://kaylie-payment-site.vercel.app/"
@@ -551,22 +586,30 @@
       if (success) {
         alert("Payment gateway saved and synced to GitHub!");
       }
+      setButtonLoading(button, false);
     });
 
-    document.getElementById("change-password").addEventListener("click", async () => {
+    document.getElementById("change-password").addEventListener("click", async (e) => {
+      const button = e.target;
+      setButtonLoading(button, true);
       const newPass = document.getElementById("new-password").value;
       const confirmPass = document.getElementById("confirm-password").value;
       if (newPass && newPass === confirmPass) {
         settings.adminPassword = newPass;
         const success = await saveData();
         if (success) {
-          alert("Password changed successfully and synced to GitHub!");
+          await fetchData(); // Refresh settings to ensure the new password is loaded
+          alert("Password changed successfully and synced to GitHub! Please log in again with your new password.");
           document.getElementById("new-password").value = "";
           document.getElementById("confirm-password").value = "";
+          document.getElementById("login-email").value = "";
+          document.getElementById("login-password").value = "";
+          loginModal.classList.remove("hidden"); // Force re-login
         }
       } else {
         alert("Passwords do not match or are empty!");
       }
+      setButtonLoading(button, false);
     });
 
     async function initialize() {
@@ -592,5 +635,5 @@
 
     initialize();
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92f7dd809f966738',t:'MTc0NDUxNDgyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
