@@ -196,8 +196,8 @@
   <!-- Footer -->
   <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12 py-4 sm:py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <p id="copyright-text" class="text-gray-600 dark:text-gray-300 text-sm sm:text-base">© 2025 Deriv Bot Store. All rights reserved.</p>
-      <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">Support: <a id="support-email" href="/cdn-cgi/l/email-protection#730112050e1316331712051e0115100b1211051e03145d101c1e" class="underline hover:text-green-600 dark:hover:text-green-400"><span class="__cf_email__" data-cfemail="7c0f1e090219040a3c18190e150a1f180319091d061b0c55181c1e">[email&#160;protected]</span></a></p>
+      <p id="copyright-text" class="text-gray-600 dark:text-gray-300 text-sm sm:text-base"></p>
+      <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">Support: <a id="support-email" href="/cdn-cgi/l/email-protection#330112050e1316331712051e0115100b1211051e03145d101c1e" class="underline hover:text-green-600 dark:hover:text-green-400"><span class="__cf_email__" data-cfemail="7c0f1e090219040a3c18190e150a1f180319091d061b0c55181c1e">[email&#160;protected]</span></a></p>
       <div id="social-links" class="mt-2 sm:mt-4 flex justify-center space-x-4 flex-wrap">
         <!-- Social links injected here -->
       </div>
@@ -210,6 +210,16 @@
     let products = [];
     let categories = [];
     let settings = {};
+
+    // Decode encoded Unicode strings (e.g., for emojis)
+    function decodeUnicode(str) {
+      try {
+        return decodeURIComponent(escape(str));
+      } catch (e) {
+        console.error("Error decoding string:", e);
+        return str; // Fallback to original string if decoding fails
+      }
+    }
 
     // Fetch data from GitHub (raw content URL)
     async function fetchData() {
@@ -226,6 +236,16 @@
           urgentMessage: { enabled: false, text: "" },
           paymentGateway: { name: "", url: "https://kaylie-payment-site.vercel.app/" }
         };
+        // Decode descriptions to handle emojis
+        products = products.map(product => ({
+          ...product,
+          desc: decodeUnicode(product.desc)
+        }));
+        // Decode urgent message and copyright text
+        if (settings.urgentMessage && settings.urgentMessage.text) {
+          settings.urgentMessage.text = decodeUnicode(settings.urgentMessage.text);
+        }
+        settings.copyrightText = decodeUnicode(settings.copyrightText);
       } catch (error) {
         console.error("Error fetching data:", error);
         alert("Failed to load data from GitHub. Please check the console for details.");
@@ -401,7 +421,9 @@
     async function updateFooter() {
       document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
       document.getElementById("support-email").textContent = settings.supportEmail;
-      document.getElementById("copyright-text").textContent = settings.copyrightText;
+      // Replace © with &copy; to ensure proper rendering
+      const copyrightText = settings.copyrightText.replace(/©/g, '&copy;');
+      document.getElementById("copyright-text").innerHTML = copyrightText;
 
       const socialLinks = document.getElementById("social-links");
       const socialIcons = {
@@ -455,5 +477,5 @@
 
     initialize();
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92f76149cf28828a',t:'MTc0NDUwOTczMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92f76149cf28828a',t:'MTc0NDUwOTczMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92f7dd809c09e14d',t:'MTc0NDUxNDgyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
