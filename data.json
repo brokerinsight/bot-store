@@ -40,7 +40,7 @@
     },
     "paymentGateway": {
       "name": "",
-      "url": "https://bot-store-tau.vercel.app/checkout.html/"
+      "url": "https://kaylie-payment-site.vercel.app/"
     }
   }
 }
