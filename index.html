@@ -100,10 +100,12 @@
 
   <!-- In-App Browser Pop-up -->
   <div id="in-app-message" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg p-6 max-w-sm w-full text-center">
-      <p class="text-gray-900 mb-4">For a smoother experience, open in your browser.</p>
-      <button id="open-browser" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 mr-2">Open</button>
-      <button id="stay-here" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700">Stay Here</button>
+    <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4 text-center shadow-lg">
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Open in Browser</h3>
+      <p class="text-gray-600 dark:text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
+        For a smooth experience please open this page in your default browser. Tap your app's menu (often a three-dot icon) and select "open on browser".
+      </p>
+      <button id="in-app-cancel" class="bg-gray-600 text-white px-6 py-2 rounded-full hover:bg-gray-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500">Cancel</button>
     </div>
   </div>
 
@@ -195,7 +197,7 @@
   <footer class="bg-white dark:bg-gray-800 shadow-inner mt-12 py-4 sm:py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <p id="copyright-text" class="text-gray-600 dark:text-gray-300 text-sm sm:text-base">© 2025 Deriv Bot Store. All rights reserved.</p>
-      <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">Support: <a id="support-email" href="mailto:support@derivbotstore.com" class="underline hover:text-green-600 dark:hover:text-green-400">support@derivbotstore.com</a></p>
+      <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">Support: <a id="support-email" href="/cdn-cgi/l/email-protection#730112050e1316331712051e0115100b1211051e03145d101c1e" class="underline hover:text-green-600 dark:hover:text-green-400"><span class="__cf_email__" data-cfemail="7c0f1e090219040a3c18190e150a1f180319091d061b0c55181c1e">[email&#160;protected]</span></a></p>
       <div id="social-links" class="mt-2 sm:mt-4 flex justify-center space-x-4 flex-wrap">
         <!-- Social links injected here -->
       </div>
@@ -203,7 +205,7 @@
   </footer>
 
   <!-- Scripts -->
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     // Data variables
     let products = [];
     let categories = [];
@@ -236,11 +238,7 @@
     if (isInApp) {
       const inAppMessage = document.getElementById("in-app-message");
       inAppMessage.classList.remove("hidden");
-      document.getElementById("open-browser").addEventListener("click", () => {
-        const url = window.location.href;
-        window.open(url, "_system");
-      });
-      document.getElementById("stay-here").addEventListener("click", () => {
+      document.getElementById("in-app-cancel").addEventListener("click", () => {
         inAppMessage.classList.add("hidden");
       });
     }
@@ -457,5 +455,5 @@
 
     initialize();
   </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92f76149cf28828a',t:'MTc0NDUwOTczMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
