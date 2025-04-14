@@ -97,10 +97,24 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+        #cookie-notice {
+            backdrop-filter: blur(5px);
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Cookie Notice -->
+    <div id="cookie-notice" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 z-50 hidden">
+        <p class="text-center text-sm">
+            We use cookies to improve your experience. By continuing, you agree to our <a href="#privacy-policy" class="underline hover:text-green-400">Privacy Policy</a>.
+        </p>
+        <button id="cookie-accept" class="mt-2 block mx-auto bg-green-600 text-white px-4 py-1 rounded-full hover:bg-green-700">Accept</button>
+    </div>
+
     <!-- Urgent Message Pop-up -->
     <div id="urgent-message" class="fixed top-0 left-0 right-0 text-white p-4 z-50 hidden">
         <p id="urgent-text" class="text-center text-lg font-semibold"></p>
@@ -131,6 +145,14 @@
                     </div>
                 </div>
                 <div class="flex items-center">
+                    <div class="relative dropdown hidden sm:block">
+                        <button class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white inline-flex items-center px-1 pt-1 text-sm font-medium">Legal</button>
+                        <div class="dropdown-menu absolute hidden bg-white dark:bg-gray-800 shadow-lg rounded-md mt-2">
+                            <a href="#contact-us" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Contact Us</a>
+                            <a href="#about-us" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">About Us</a>
+                            <a href="#privacy-policy" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Privacy Policy</a>
+                        </div>
+                    </div>
                     <button id="dark-mode-toggle" class="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-white p-2">
                         <svg id="dark-mode-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -155,6 +177,14 @@
             </div>
             <div id="mobile-nav-links" class="flex flex-col p-4 space-y-4">
                 <a href="#" data-category="all" class="nav-link text-gray-900 dark:text-white text-sm font-medium">Home</a>
+                <div class="dropdown">
+                    <button class="text-gray-900 dark:text-white text-sm font-medium">Legal</button>
+                    <div class="dropdown-menu mt-2 space-y-2">
+                        <a href="#contact-us" class="block text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium">Contact Us</a>
+                        <a href="#about-us" class="block text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium">About Us</a>
+                        <a href="#privacy-policy" class="block text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white text-sm font-medium">Privacy Policy</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -210,6 +240,24 @@
                 </form>
             </div>
         </div>
+
+        <!-- Contact Us Page -->
+        <div id="contact-us-section" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Contact Us</h2>
+            <div id="contact-us-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 prose dark:prose-invert"></div>
+        </div>
+
+        <!-- About Us Page -->
+        <div id="about-us-section" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">About Us</h2>
+            <div id="about-us-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 prose dark:prose-invert"></div>
+        </div>
+
+        <!-- Privacy Policy Page -->
+        <div id="privacy-policy-section" class="hidden">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Privacy Policy</h2>
+            <div id="privacy-policy-content" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 prose dark:prose-invert"></div>
+        </div>
     </main>
 
     <!-- MPESA Payment Popup -->
@@ -218,7 +266,7 @@
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">Complete Payment via MPESA</h3>
             <p class="text-gray-600 dark:text-gray-300 mb-4">Go to MPESA > Buy Goods and Services > Enter Till Number:</p>
             <div class="flex items-center justify-center mb-4">
-                <input id="till-number" type="text" readonly value="4933614" class="p-2 border border-gray-300 dark:border-gray-600 rounded-l-md bg-gray-100 dark:bg-gray-700">
+                <input id="till-number" type="text" readonly class="p-2 border border-gray-300 dark:border-gray-600 rounded-l-md bg-gray-100 dark:bg-gray-700">
                 <button id="copy-till" class="bg-gray-600 text-white p-2 rounded-r-md hover:bg-gray-700">Copy</button>
             </div>
             <p class="text-gray-600 dark:text-gray-300 mb-4">Amount to Pay: <span id="mpesa-amount"></span> KES</p>
@@ -283,6 +331,11 @@
             <p id="copyright-text" class="text-gray-600 dark:text-gray-300 text-sm sm:text-base"></p>
             <p class="text-gray-500 dark:text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">Support: <a id="support-email" href="#" class="underline hover:text-green-600 dark:hover:text-green-400"></a></p>
             <div id="social-links" class="mt-2 sm:mt-4 flex justify-center space-x-4 flex-wrap"></div>
+            <div id="legal-links" class="mt-2 sm:mt-4 flex justify-center space-x-4 flex-wrap">
+                <a href="#contact-us" class="text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 text-sm">Contact Us</a>
+                <a href="#about-us" class="text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 text-sm">About Us</a>
+                <a href="#privacy-policy" class="text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 text-sm">Privacy Policy</a>
+            </div>
         </div>
     </footer>
 
@@ -291,7 +344,29 @@
         let products = [];
         let categories = [];
         let settings = {};
-        let usdToKesRate = 130; // Fallback rate
+        let usdToKesRate = 130;
+
+        // Cookie handling
+        function setCookie(name, value, days) {
+            const expires = new Date(Date.now() + days * 864e5).toUTCString();
+            document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+        }
+
+        function getCookie(name) {
+            const cookies = document.cookie.split("; ").find(row => row.startsWith(`${name}=`));
+            return cookies ? decodeURIComponent(cookies.split("=")[1]) : null;
+        }
+
+        function showCookieNotice() {
+            if (!getCookie("cookieConsent")) {
+                document.getElementById("cookie-notice").classList.remove("hidden");
+            }
+        }
+
+        document.getElementById("cookie-accept").addEventListener("click", () => {
+            setCookie("cookieConsent", "true", 365);
+            document.getElementById("cookie-notice").classList.add("hidden");
+        });
 
         // Fetch USD to KES rate
         async function fetchExchangeRate() {
@@ -304,31 +379,22 @@
             }
         }
 
-        // Decode Unicode strings
-        function decodeUnicode(str) {
-            try {
-                return decodeURIComponent(escape(str));
-            } catch (e) {
-                console.error("Error decoding string:", e);
-                return str;
-            }
-        }
-
-        // Fetch data from Google Sheets
+        // Fetch data from server
         async function fetchData() {
             try {
-                const response = await fetch("https://sheets.googleapis.com/v4/spreadsheets/1eUZ0pcxFDiCqa3ZS1kZ2XJEz-XGJrGoSVwTThNDipNQ/values/Products!A:D", {
-                    headers: { Authorization: `Bearer ${settings.googleApiKey}` }
-                });
-                const data = await response.json();
-                const rows = data.values || [];
-                rows.shift(); // Remove header
-                products = rows.map(row => ({
-                    item: row[0],
-                    name: row[1],
-                    price: parseFloat(row[2]),
-                    fileId: row[3],
-                    desc: decodeUnicode(row[1]), // Simplified for demo
+                const [productsResponse, settingsResponse] = await Promise.all([
+                    fetch("http://localhost:3000/pending-invoices"), // Simplified for demo
+                    fetch("http://localhost:3000/settings")
+                ]);
+                const productsData = await productsResponse.json();
+                const settingsData = await settingsResponse.json();
+
+                products = productsData.invoices.map(invoice => ({
+                    item: invoice.item,
+                    name: invoice.name,
+                    price: parseFloat(invoice.price),
+                    fileId: "",
+                    desc: invoice.name,
                     img: "https://via.placeholder.com/300",
                     category: "Bots",
                     embed: "",
@@ -337,23 +403,11 @@
                     clicks: 0
                 }));
 
-                // Fetch settings (simplified, assuming stored elsewhere or hardcoded)
-                settings = {
-                    supportEmail: "kaylie254.business@gmail.com",
-                    copyrightText: "© 2025 Deriv Bot Store. All rights reserved.",
-                    logoUrl: "",
-                    socials: {
-                        tiktok: "https://www.tiktok.com/@kaylie_254",
-                        whatsapp: "https://wa.link/5l1brp",
-                        youtube: "https://www.youtube.com/@Kaylie254"
-                    },
-                    urgentMessage: { enabled: true, text: "We do not Promise you success always risk what you can afford to lose!!" },
-                    tillNumber: "4933614"
-                };
+                settings = settingsData.settings;
                 categories = ["Bots"];
             } catch (error) {
                 console.error("Error fetching data:", error);
-                alert("Failed to load products. Please try again.");
+                alert("Failed to load data. Please try again.");
             }
         }
 
@@ -385,6 +439,7 @@
                     document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("border-b-2", "border-green-500"));
                     link.classList.add("border-b-2", "border-green-500");
                     document.getElementById("mobile-menu").classList.remove("open");
+                    showSection("product-section");
                 });
             });
         }
@@ -507,7 +562,7 @@
         async function updateFooter() {
             document.getElementById("support-email").href = `mailto:${settings.supportEmail}`;
             document.getElementById("support-email").textContent = settings.supportEmail;
-            document.getElementById("copyright-text").innerHTML = settings.copyrightText.replace(/©/g, '&copy;');
+            document.getElementById("copyright-text").innerHTML = settings.copyrightText || "© 2025 Deriv Bot Store. All rights reserved.";
 
             const socialLinks = document.getElementById("social-links");
             const socialIcons = {
@@ -515,7 +570,8 @@
                 whatsapp: "WhatsApp",
                 youtube: "YouTube"
             };
-            Object.keys(settings.socials).forEach(key => {
+            socialLinks.innerHTML = "";
+            Object.keys(settings.socials || {}).forEach(key => {
                 if (settings.socials[key]) {
                     const link = document.createElement("a");
                     link.href = settings.socials[key];
@@ -536,25 +592,73 @@
 
         // Urgent message
         function showUrgentMessage() {
-            if (settings.urgentMessage.enabled && settings.urgentMessage.text) {
+            if (settings.urgentMessageEnabled === "true" && settings.urgentMessageText) {
                 document.getElementById("urgent-message").classList.remove("hidden");
-                document.getElementById("urgent-text").textContent = settings.urgentMessage.text;
+                document.getElementById("urgent-text").textContent = settings.urgentMessageText;
                 document.getElementById("urgent-close").addEventListener("click", () => {
                     document.getElementById("urgent-message").classList.add("hidden");
                 });
             }
         }
 
+        // Show section
+        function showSection(sectionId) {
+            ["product-section", "checkout-section", "contact-us-section", "about-us-section", "privacy-policy-section"].forEach(id => {
+                document.getElementById(id).classList.add("hidden");
+            });
+            document.getElementById(sectionId).classList.remove("hidden");
+        }
+
+        // Render pages
+        function renderPages() {
+            document.getElementById("contact-us-content").innerHTML = settings.contactUsContent;
+            document.getElementById("about-us-content").innerHTML = settings.aboutUsContent;
+            document.getElementById("privacy-policy-content").innerHTML = settings.privacyPolicyContent;
+
+            document.querySelectorAll("[href='#contact-us']").forEach(link => {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    showSection("contact-us-section");
+                    document.getElementById("mobile-menu").classList.remove("open");
+                });
+            });
+            document.querySelectorAll("[href='#about-us']").forEach(link => {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    showSection("about-us-section");
+                    document.getElementById("mobile-menu").classList.remove("open");
+                });
+            });
+            document.querySelectorAll("[href='#privacy-policy']").forEach(link => {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    showSection("privacy-policy-section");
+                    document.getElementById("mobile-menu").classList.remove("open");
+                });
+            });
+        }
+
         // Checkout handling
         async function initCheckout() {
             const urlParams = new URLSearchParams(window.location.search);
-            const name = urlParams.get("name");
-            const item = urlParams.get("item");
-            const price = parseFloat(urlParams.get("price"));
+            let name = urlParams.get("name");
+            let item = urlParams.get("item");
+            let price = parseFloat(urlParams.get("price"));
+
+            // Check cookies
+            const checkoutData = getCookie("checkoutData");
+            if (checkoutData) {
+                const data = JSON.parse(checkoutData);
+                name = name || data.name;
+                item = item || data.item;
+                price = price || data.price;
+                document.getElementById("checkout-email").value = data.email || "";
+                document.getElementById("checkout-phone").value = data.phone || "";
+                document.getElementById("mpesa-code").value = data.mpesaCode || "";
+            }
 
             if (name && item && price) {
-                document.getElementById("product-section").classList.add("hidden");
-                document.getElementById("checkout-section").classList.remove("hidden");
+                showSection("checkout-section");
                 document.getElementById("checkout-name").value = decodeURIComponent(name);
                 document.getElementById("checkout-item").value = item;
                 document.getElementById("checkout-price").value = price;
@@ -570,6 +674,14 @@
                     alert("Please enter email and phone number.");
                     return;
                 }
+                setCookie("checkoutData", JSON.stringify({
+                    name: document.getElementById("checkout-name").value,
+                    item: document.getElementById("checkout-item").value,
+                    price: parseFloat(document.getElementById("checkout-price").value),
+                    email,
+                    phone,
+                    mpesaCode: ""
+                }), 1);
                 document.getElementById("mpesa-popup").classList.remove("hidden");
                 startCountdown("countdown-circle", "countdown-text", 600, () => {
                     document.getElementById("mpesa-popup").classList.add("hidden");
@@ -586,6 +698,9 @@
             document.getElementById("mpesa-code").addEventListener("input", (e) => {
                 const submitBtn = document.getElementById("mpesa-submit");
                 submitBtn.disabled = e.target.value.length < 8;
+                const checkoutData = JSON.parse(getCookie("checkoutData") || "{}");
+                checkoutData.mpesaCode = e.target.value;
+                setCookie("checkoutData", JSON.stringify(checkoutData), 1);
             });
 
             document.getElementById("mpesa-submit").addEventListener("click", async () => {
@@ -613,6 +728,7 @@
                     });
                     const data = await response.json();
                     if (data.success) {
+                        setCookie("checkoutData", "", -1); // Clear cookie
                         alert("Payment submitted. You’ll receive your file once confirmed.");
                         window.location.href = "/";
                     } else {
@@ -653,7 +769,9 @@
             updateFooter();
             updateLogo();
             showUrgentMessage();
+            showCookieNotice();
             initCheckout();
+            renderPages();
         }
 
         initialize();
