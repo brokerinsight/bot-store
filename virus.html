@@ -331,7 +331,7 @@
       button.disabled = true;
 
       try {
-        const res = await fetch('https://your-render-backend-url.onrender.com/admin-login', {
+        const res = await fetch('https://bot-delivery-system.onrender.com/admin-login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password })
@@ -363,10 +363,10 @@
     async function fetchData() {
       try {
         const [productsRes, pendingRes, confirmedRes, settingsRes] = await Promise.all([
-          fetch('https://your-render-backend-url.onrender.com/products'),
-          fetch('https://your-render-backend-url.onrender.com/pending-invoices'),
-          fetch('https://your-render-backend-url.onrender.com/pending-invoices'), // Adjust for confirmed if separate endpoint
-          fetch('https://your-render-backend-url.onrender.com/settings')
+          fetch('https://bot-delivery-system.onrender.com/products'),
+          fetch('https://bot-delivery-system.onrender.com/pending-invoices'),
+          fetch('https://bot-delivery-system.onrender.com/pending-invoices'),
+          fetch('https://bot-delivery-system.onrender.com/settings')
         ]);
         const productsData = await productsRes.json();
         const pendingData = await pendingRes.json();
@@ -434,7 +434,7 @@
           const timestamp = btn.dataset.timestamp;
           const status = btn.dataset.action;
           try {
-            const res = await fetch('https://your-render-backend-url.onrender.com/update-invoice', {
+            const res = await fetch('https://bot-delivery-system.onrender.com/update-invoice', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ timestamp, status })
@@ -495,7 +495,7 @@
         const reader = new FileReader();
         reader.onload = async () => {
           const fileContent = reader.result.split(',')[1];
-          const fileRes = await fetch('https://your-render-backend-url.onrender.com/upload-file', {
+          const fileRes = await fetch('https://bot-delivery-system.onrender.com/upload-file', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ fileName: file.name, fileContent })
@@ -608,7 +608,7 @@
           const reader = new FileReader();
           reader.onload = async () => {
             const fileContent = reader.result.split(',')[1];
-            const fileRes = await fetch('https://your-render-backend-url.onrender.com/upload-file', {
+            const fileRes = await fetch('https://bot-delivery-system.onrender.com/upload-file', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ fileName: file.name, fileContent })
@@ -641,9 +641,10 @@
     async function updateProductsSheet() {
       const values = products.map(p => [
         p.item,
-        p.name,
-        p.price,
         p.fileId,
+        p.price,
+        '',
+        p.name,
         p.desc,
         p.embed,
         p.category,
@@ -651,7 +652,7 @@
         p.isNew ? 'TRUE' : 'FALSE',
         p.isArchived ? 'TRUE' : 'FALSE'
       ]);
-      await fetch('https://your-render-backend-url.onrender.com/update-products', {
+      await fetch('https://bot-delivery-system.onrender.com/update-products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ products: values })
@@ -693,7 +694,7 @@
       };
 
       try {
-        const res = await fetch('https://your-render-backend-url.onrender.com/update-settings', {
+        const res = await fetch('https://bot-delivery-system.onrender.com/update-settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newSettings)
